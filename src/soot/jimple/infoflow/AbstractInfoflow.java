@@ -184,7 +184,7 @@ public abstract class AbstractInfoflow implements IInfoflow {
 		
 		//Options.v().set_no_bodies_for_excluded(true);
 		Options.v().set_allow_phantom_refs(true);
-		Options.v().set_include_all(true);
+		
 		if (logger.isDebugEnabled())
 			Options.v().set_output_format(Options.output_format_jimple);
 		else
@@ -203,7 +203,7 @@ public abstract class AbstractInfoflow implements IInfoflow {
 		}
 		else
 			Options.v().set_soot_classpath(appendClasspath(appPath, libPath));
-		Scene.v().setSourceMethod(config.getSourceMethod());
+		
 		// Configure the callgraph algorithm
 		switch (config.getCallgraphAlgorithm()) {
 			case AutomaticSelection:
@@ -265,6 +265,8 @@ public abstract class AbstractInfoflow implements IInfoflow {
 		//at the end of setting: load user settings:
 		if (sootConfig != null)
 			sootConfig.setSootOptions(Options.v());
+		
+		Options.v().set_include_all(true);
 		
 		// load all entryPoint classes with their bodies
 		for (String className : classes)
