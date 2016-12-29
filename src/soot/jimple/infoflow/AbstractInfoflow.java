@@ -182,8 +182,9 @@ public abstract class AbstractInfoflow implements IInfoflow {
 		logger.info("Resetting Soot...");
 		soot.G.reset();
 		
-		Options.v().set_no_bodies_for_excluded(true);
+		//Options.v().set_no_bodies_for_excluded(true);
 		Options.v().set_allow_phantom_refs(true);
+		Options.v().set_include_all(true);
 		if (logger.isDebugEnabled())
 			Options.v().set_output_format(Options.output_format_jimple);
 		else
@@ -202,7 +203,7 @@ public abstract class AbstractInfoflow implements IInfoflow {
 		}
 		else
 			Options.v().set_soot_classpath(appendClasspath(appPath, libPath));
-		
+		Scene.v().setSourceMethod(config.getSourceMethod());
 		// Configure the callgraph algorithm
 		switch (config.getCallgraphAlgorithm()) {
 			case AutomaticSelection:

@@ -629,5 +629,11 @@ public class InfoflowConfiguration {
 			logger.info("Recursive access path shortening is NOT enabled");
 		logger.info("Taint analysis enabled: " + taintAnalysisEnabled);
 	}
-	
+	protected String sourceMethod=null;
+	public void setSourceMethod(String sourceMethod){
+		this.sourceMethod=sourceMethod;
+	}
+	public String getSourceMethod(){
+		return sourceMethod;
+	}
 }
