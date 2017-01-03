@@ -67,6 +67,8 @@ import soot.jimple.infoflow.solver.fastSolver.InfoflowSolver;
 import soot.jimple.infoflow.source.ISourceSinkManager;
 import soot.jimple.infoflow.util.SootMethodRepresentationParser;
 import soot.jimple.infoflow.util.SystemClassHandler;
+import soot.jimple.spark.summary.ClassesObjects;
+import soot.jimple.spark.summary.MethodObjects;
 import soot.jimple.toolkits.callgraph.ReachableMethods;
 import soot.options.Options;
 /**
@@ -126,7 +128,39 @@ public class Infoflow extends AbstractInfoflow {
 		this.pathBuilderFactory = pathBuilderFactory == null ? new DefaultPathBuilderFactory()
 				: pathBuilderFactory;
 	}
+	public void computeInfoflow(String appPath, String libPath,ClassesObjects classesObjects,
+			IEntryPointCreator entryPointCreator,
+			ISourceSinkManager sourcesSinks) {
+		if (sourcesSinks == null) {
+			logger.error("Sources are empty!");
+			return;
+		}
+		initializeSoot(appPath, libPath, entryPointCreator.getRequiredClasses());
+		Options.v().set_classes_objects(classesObjects);
+		// entryPoints are the entryPoints required by Soot to calculate Graph - if there is no main method,
+		// we have to create a new main method and use it as entryPoint and store our real entryPoints
+		Scene.v().setEntryPoints(Collections.singletonList(entryPointCreator.createDummyMain()));
 
+		// Run the analysis
+        runAnalysis(sourcesSinks, null);
+	}
+	public void computeInfoflow(String appPath, String libPath,MethodObjects methodObjects,
+			IEntryPointCreator entryPointCreator,
+			ISourceSinkManager sourcesSinks) {
+		if (sourcesSinks == null) {
+			logger.error("Sources are empty!");
+			return;
+		}
+		initializeSoot(appPath, libPath, entryPointCreator.getRequiredClasses());
+		Options.v().set_method_objects(methodObjects);
+		// entryPoints are the entryPoints required by Soot to calculate Graph - if there is no main method,
+		// we have to create a new main method and use it as entryPoint and store our real entryPoints
+		Scene.v().setEntryPoints(Collections.singletonList(entryPointCreator.createDummyMain()));
+
+		// Run the analysis
+        runAnalysis(sourcesSinks, null);
+	}
+	
 	@Override
 	public void computeInfoflow(String appPath, String libPath,
 			IEntryPointCreator entryPointCreator,
@@ -135,7 +169,8 @@ public class Infoflow extends AbstractInfoflow {
 			logger.error("Sources are empty!");
 			return;
 		}
-
+		Options option=Options.v();
+		option.set_debug(true);
 		initializeSoot(appPath, libPath, entryPointCreator.getRequiredClasses());
 
 		// entryPoints are the entryPoints required by Soot to calculate Graph - if there is no main method,
@@ -153,7 +188,7 @@ public class Infoflow extends AbstractInfoflow {
 			logger.error("Sources are empty!");
 			return;
 		}
-
+		
 		initializeSoot(appPath, libPath,
 				SootMethodRepresentationParser.v().parseClassNames
 					(Collections.singletonList(entryPoint), false).keySet(), entryPoint);

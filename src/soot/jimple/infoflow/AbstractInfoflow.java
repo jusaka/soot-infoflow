@@ -181,10 +181,8 @@ public abstract class AbstractInfoflow implements IInfoflow {
 		// reset Soot:
 		logger.info("Resetting Soot...");
 		soot.G.reset();
-		
-		//Options.v().set_no_bodies_for_excluded(true);
+		Options.v().set_no_bodies_for_excluded(true);
 		Options.v().set_allow_phantom_refs(true);
-		
 		if (logger.isDebugEnabled())
 			Options.v().set_output_format(Options.output_format_jimple);
 		else
@@ -265,8 +263,6 @@ public abstract class AbstractInfoflow implements IInfoflow {
 		//at the end of setting: load user settings:
 		if (sootConfig != null)
 			sootConfig.setSootOptions(Options.v());
-		
-		Options.v().set_include_all(true);
 		
 		// load all entryPoint classes with their bodies
 		for (String className : classes)

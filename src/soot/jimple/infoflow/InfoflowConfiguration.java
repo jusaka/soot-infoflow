@@ -3,6 +3,8 @@ package soot.jimple.infoflow;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import soot.jimple.spark.summary.MethodObjects;
+
 
 /**
  * Central configuration class for FlowDroid
@@ -628,12 +630,5 @@ public class InfoflowConfiguration {
 		else
 			logger.info("Recursive access path shortening is NOT enabled");
 		logger.info("Taint analysis enabled: " + taintAnalysisEnabled);
-	}
-	protected String sourceMethod=null;
-	public void setSourceMethod(String sourceMethod){
-		this.sourceMethod=sourceMethod;
-	}
-	public String getSourceMethod(){
-		return sourceMethod;
 	}
 }
