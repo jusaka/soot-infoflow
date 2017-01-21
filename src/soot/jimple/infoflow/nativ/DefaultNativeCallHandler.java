@@ -13,10 +13,12 @@ package soot.jimple.infoflow.nativ;
 import java.util.Collections;
 import java.util.Set;
 
+import soot.Scene;
 import soot.Value;
 import soot.jimple.Stmt;
 import soot.jimple.infoflow.data.Abstraction;
 import soot.jimple.infoflow.data.AccessPath.ArrayTaintType;
+import soot.jimple.toolkits.callgraph.CallGraph;
 
 public class DefaultNativeCallHandler extends AbstractNativeCallHandler {
 	
@@ -35,10 +37,14 @@ public class DefaultNativeCallHandler extends AbstractNativeCallHandler {
 		//to the specified position of the destination array.
 		if (source.isAbstractionActive()) {
 			if(call.getInvokeExpr().getMethod().getSignature().equals(SIG_ARRAYCOPY)) {
+				CallGraph cg=Scene.v().getCallGraph();
 				if(params[0].equals(source.getAccessPath().getPlainValue())) {
 					if (manager.getTypeUtils().checkCast(source.getAccessPath(), params[2].getType())) {
 						Abstraction abs = source.deriveNewAbstraction(params[2], false, call,
 								source.getAccessPath().getBaseType());
+						if(source.getSourceContext()!=null){
+							abs.setSourceContext(source.getSourceContext());
+						}
 						abs.setCorrespondingCallSite(call);
 						return Collections.singleton(abs);
 					}
